@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_convert_ocr"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.sourav.ocrconvert.ConvertOCR">
+
+    <TextView
+        android:text="Path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/path" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
+        android:layout_alignBaseline="@+id/browse"
+        android:layout_alignBottom="@+id/browse"
+        android:layout_toStartOf="@+id/browse"
+        android:elevation="1dp" />
+
+    <TextView
+        android:text="Language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/browse"
+        android:layout_toEndOf="@+id/path"
+        android:layout_marginStart="8dp"
+        android:textColor="@android:color/holo_blue_light" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select File"
+        android:id="@+id/browse"
+        android:textColor="@android:color/background_light"
+        android:background="@android:color/holo_blue_light"
+        android:elevation="0dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:layout_below="@+id/path"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="48dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Download"
+        android:id="@+id/openFolder"
+        android:textColor="@android:color/background_light"
+        android:background="@android:color/holo_blue_light"
+        android:layout_below="@+id/textView3"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="7dp"
+        android:layout_marginTop="30dp" />
+
+    <com.todddavies.components.progressbar.ProgressWheel
+        android:id="@+id/pw_spinner"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        ProgressWheel:pwText="Converting..."
+        ProgressWheel:pwTextColor="#222"
+        ProgressWheel:pwTextSize="14sp"
+        ProgressWheel:pwRimColor="#330097D6"
+        ProgressWheel:pwBarLength="60dp"
+        ProgressWheel:pwBarColor="#0097D6"
+        ProgressWheel:pwBarWidth="5dp"
+        ProgressWheel:pwRimWidth="2dp"
+        android:layout_marginTop="22dp"
+        android:layout_alignTop="@+id/openFolder"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>
