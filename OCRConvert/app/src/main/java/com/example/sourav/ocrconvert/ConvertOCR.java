@@ -16,9 +16,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
+import android.widget.*;
+import java.util.*;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.todddavies.components.progressbar.ProgressWheel;
@@ -47,6 +49,9 @@ public class ConvertOCR extends AppCompatActivity implements View.OnClickListene
     Button browse = null;
     Button openFolder = null;
     ProgressWheel pw = null;
+    private Spinner langSpinner, outputFormat;
+    private String lang = "";
+    private String docType = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +63,12 @@ public class ConvertOCR extends AppCompatActivity implements View.OnClickListene
         openFolder = (Button) findViewById(R.id.openFolder);
         openFolder.setOnClickListener(this);
         openFolder.setEnabled(false);
+        openFolder.setVisibility(View.INVISIBLE);
 
+        // Create spinner or dropdown for languages
+
+        addLanguages();
+        addOutputFormat();
         pw = (ProgressWheel) findViewById(R.id.pw_spinner);
         pw.setVisibility(View.GONE);
 //        pw.setText("Converting");
@@ -68,6 +78,9 @@ public class ConvertOCR extends AppCompatActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.browse:
+                // Set Language and output format
+                lang = (String) langSpinner.getSelectedItem();
+                docType = (String) outputFormat.getSelectedItem();
                 Intent intent = new Intent()
                         .setType("*/*")
 //                        .setType("image/*|application/pdf")
@@ -86,6 +99,47 @@ public class ConvertOCR extends AppCompatActivity implements View.OnClickListene
             default:
                 break;
         }
+    }
+
+    public void addLanguages(){
+        langSpinner = (Spinner) findViewById(R.id.langSpinner);
+        List<String> list = new ArrayList<String>();
+        list.add("english");
+        list.add("german");
+        list.add("french");
+        list.add("italian");
+        list.add("japanese");
+        list.add("korean");
+        list.add("latin");
+        list.add("polish");
+        list.add("portuguese");
+        list.add("russian");
+        list.add("serbian");
+        list.add("spanish");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        langSpinner.setAdapter(dataAdapter);
+    }
+
+    public void addOutputFormat(){
+        outputFormat = (Spinner) findViewById(R.id.outputFormat);
+        List<String> list = new ArrayList<String>();
+        list.add("txt");
+        list.add("pdf");
+        list.add("doc");
+        list.add("xls");
+        list.add("docx");
+        list.add("pdfimg");
+        list.add("xlsx");
+
+
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        outputFormat.setAdapter(dataAdapter);
     }
 
     @Override
@@ -125,7 +179,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
            // String filePath = selectedfile.getPath();
           // webService.mainOCR(filePath);
 
-            webService.mainOCR(path, this);
+            webService.mainOCR(path, this, lang, docType);
 //            outputFileURL = webService.mainOCR(path, this);
 //            Toast.makeText(this, "File converted", Toast.LENGTH_SHORT).show();
         }
@@ -139,6 +193,9 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         else if(requestCode == 100 && resultCode == RESULT_OK) {
             // Disable Open Folder button again
             openFolder.setEnabled(false);
+            openFolder.setVisibility(View.INVISIBLE);
+            pw.setVisibility(View.VISIBLE);
+            pw.startSpinning();
             Bundle extras = data.getExtras();
             String path = (String) extras.get(DirectoryPicker.CHOSEN_DIRECTORY);
             System.out.println(path);
@@ -151,8 +208,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 try {
                     // Download output file
                     //DownloadConvertedFile(outputFileURL, path);
-                    Boolean ans =new DownloadFile().execute(outputFileURL, path).get();
-                    Toast.makeText(this, "output.txt File downloaded", Toast.LENGTH_SHORT).show();
+                    new DownloadFile().execute(outputFileURL, path);
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -279,7 +335,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 
                     // opens an output stream to save into file
-                    FileOutputStream outputStream = new FileOutputStream(Path+"/output.txt");
+                    FileOutputStream outputStream = new FileOutputStream(Path+"/output."+docType);
 
                     int bytesRead = -1;
                     byte[] buffer = new byte[4096];
@@ -304,7 +360,9 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         @Override
         protected void onPostExecute(Boolean b){
-
+            pw.setVisibility(View.INVISIBLE);
+            pw.stopSpinning();
+            Toast.makeText(getApplicationContext(), "output.txt File downloaded", Toast.LENGTH_SHORT).show();
         }
     }
 

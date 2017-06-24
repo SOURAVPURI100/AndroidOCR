@@ -11,35 +11,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.sourav.ocrconvert.ConvertOCR">
 
-    <TextView
-        android:text="Path"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/path" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView2"
-        android:layout_alignBaseline="@+id/browse"
-        android:layout_alignBottom="@+id/browse"
-        android:layout_toStartOf="@+id/browse"
-        android:elevation="1dp" />
-
-    <TextView
-        android:text="Language"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:id="@+id/textView3"
-        android:layout_below="@+id/browse"
-        android:layout_toEndOf="@+id/path"
-        android:layout_marginStart="8dp"
-        android:textColor="@android:color/holo_blue_light" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,12 +18,10 @@
         android:id="@+id/browse"
         android:textColor="@android:color/background_light"
         android:background="@android:color/holo_blue_light"
-        android:elevation="0dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
-        android:layout_below="@+id/path"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="48dp" />
 
@@ -63,10 +32,48 @@
         android:id="@+id/openFolder"
         android:textColor="@android:color/background_light"
         android:background="@android:color/holo_blue_light"
-        android:layout_below="@+id/textView3"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="7dp"
-        android:layout_marginTop="30dp" />
+        android:layout_above="@+id/pw_spinner"
+        android:layout_alignEnd="@+id/browse" />
+
+    <TextView
+        android:text="@string/ChooseLanguage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:textColor="@android:color/holo_blue_light"
+        android:fontFamily="casual"
+        android:layout_marginBottom="41dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginLeft="30dp" />
+
+    <TextView
+        android:text="Output Format"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView4"
+        android:textColor="@android:color/holo_blue_light"
+        android:layout_marginStart="32dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/textView3"
+        android:layout_alignStart="@id/textView3"
+        android:layout_marginLeft="30dp"
+        android:fontFamily="casual" />
+
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/langSpinner"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_alignStart="@+id/browse"
+        android:layout_marginBottom="9dp" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/outputFormat"
+        android:layout_below="@id/textView3"
+        android:layout_alignStart="@id/langSpinner" />
 
     <com.todddavies.components.progressbar.ProgressWheel
         android:id="@+id/pw_spinner"
@@ -80,7 +87,10 @@
         ProgressWheel:pwBarColor="#0097D6"
         ProgressWheel:pwBarWidth="5dp"
         ProgressWheel:pwRimWidth="2dp"
-        android:layout_marginTop="22dp"
-        android:layout_alignTop="@+id/openFolder"
-        android:layout_centerHorizontal="true" />
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/textView4"
+        android:layout_marginStart="23dp" />
+
+
 </RelativeLayout>

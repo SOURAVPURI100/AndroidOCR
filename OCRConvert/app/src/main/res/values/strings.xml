@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">OCRConvert</string>
+    <string name="ChooseLanguage">Choose Language</string>
 </resources>

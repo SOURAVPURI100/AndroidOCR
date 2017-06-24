@@ -48,7 +48,7 @@ package com.example.sourav.ocrconvert;
         static ConvertOCR globalOCR =null;
 
         String outputFileURL;
-        public void mainOCR(String filePath, ConvertOCR OCR) throws Exception
+        public void mainOCR(String filePath, ConvertOCR OCR, String lang, String docType) throws Exception
         {
 		/*
 
@@ -120,7 +120,7 @@ package com.example.sourav.ocrconvert;
             // byte[] fileContent = Files.readAllBytes(Paths.get(filePath));
 
             globalOCR = OCR;
-            new OCRRestAPI().execute(filePath);
+            new OCRRestAPI().execute(filePath, lang, docType);
 //            boolean ans = new OCRRestAPI().execute(filePath).get();
 //            return outputFileURL;
         }
@@ -138,9 +138,9 @@ package com.example.sourav.ocrconvert;
             JSONArray text= (JSONArray)jsonObj.get("OCRText");
 
             // For zonal OCR: OCRText[z][p]    z - zone, p - pages
-            for(int i=0; i<text.size(); i++){
-                System.out.println(" "+ text.get(i));
-            }
+//            for(int i=0; i<text.size(); i++){
+//                System.out.println(" "+ text.get(i));
+//            }
 
             // Output file URL
             outputFileURL = (String)jsonObj.get("OutputFileUrl");
@@ -201,9 +201,14 @@ package com.example.sourav.ocrconvert;
             @Override
             protected Boolean doInBackground(String... strings) {
                 // Provide your user name and license code
-                String license_code = "1F6B8103-A13D-4EC2-981E-52954AD9F901";
-                String user_name =  "souravpuri";
-                String ocrURL = "http://www.ocrwebservice.com/restservices/processDocument?language=english&outputformat=txt";
+                // String user_name =  "souravpuri";
+//                String license_code = "1F6B8103-A13D-4EC2-981E-52954AD9F901";
+                String license_code = "8F952D83-7ED9-4FAF-BABA-F303E9F7AB03";
+                String user_name =  "AVIRDY";
+
+
+                String ocrURL = "http://www.ocrwebservice.com/restservices/processDocument?language="
+                                 +strings[1]+"&outputformat="+strings[2];
                 try {
                     File file = new File(strings[0]);
                     file.getAbsolutePath();
@@ -278,6 +283,7 @@ package com.example.sourav.ocrconvert;
             protected void onPostExecute(Boolean b){
                 globalOCR.outputFileURL = outputFileURL;
                 globalOCR.openFolder.setEnabled(true);
+                globalOCR.openFolder.setVisibility(View.VISIBLE);
                 globalOCR.pw.setVisibility(View.INVISIBLE);
                 globalOCR.pw.stopSpinning();
                 Toast.makeText(globalOCR.getApplicationContext(), "File Converted", Toast.LENGTH_SHORT).show();
