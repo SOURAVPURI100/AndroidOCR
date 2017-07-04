@@ -3,17 +3,11 @@ package com.example.sourav.ocrconvert;
 /**
  * Created by sourav on 6/19/17.
  */
-
-    import android.content.Context;
-    import android.content.Intent;
     import android.os.AsyncTask;
     import android.util.Base64;
     import android.util.Log;
     import android.view.View;
     import android.widget.Toast;
-
-    import net.bgreco.DirectoryPicker;
-
     import java.io.BufferedReader;
     import java.io.FileOutputStream;
     import java.io.IOException;
@@ -21,17 +15,9 @@ package com.example.sourav.ocrconvert;
     import java.io.InputStreamReader;
     import java.io.OutputStream;
     import java.net.HttpURLConnection;
-    import java.net.MalformedURLException;
-    import java.net.URI;
-    import java.net.URISyntaxException;
     import java.net.URL;
-    import java.nio.*;
-    import java.security.NoSuchAlgorithmException;
-    import java.util.*;
     import java.io.*;
     import org.apache.commons.io.FileUtils;
-
-    import org.json.JSONException;
     import org.json.simple.JSONArray;
     import org.json.simple.JSONObject;
     import org.json.simple.parser.JSONParser;
@@ -48,6 +34,12 @@ package com.example.sourav.ocrconvert;
         static ConvertOCR globalOCR =null;
 
         String outputFileURL;
+        OCRRestAPI OCRConvertTask = null;
+
+        public static void setActivityObject(ConvertOCR OCR){
+            globalOCR = OCR;
+            Log.i("OCR static ", globalOCR+"");
+        }
         public void mainOCR(String filePath, ConvertOCR OCR, String lang, String docType) throws Exception
         {
 		/*
@@ -120,7 +112,9 @@ package com.example.sourav.ocrconvert;
             // byte[] fileContent = Files.readAllBytes(Paths.get(filePath));
 
             globalOCR = OCR;
-            new OCRRestAPI().execute(filePath, lang, docType);
+            Log.i("OCR main ", globalOCR+"");
+            OCRConvertTask = new OCRRestAPI();
+            OCRConvertTask.execute(filePath, lang, docType);
 //            boolean ans = new OCRRestAPI().execute(filePath).get();
 //            return outputFileURL;
         }
@@ -281,6 +275,7 @@ package com.example.sourav.ocrconvert;
 
             @Override
             protected void onPostExecute(Boolean b){
+                Log.i("OCR onPost ", globalOCR+"");
                 globalOCR.outputFileURL = outputFileURL;
                 globalOCR.openFolder.setEnabled(true);
                 globalOCR.openFolder.setVisibility(View.VISIBLE);

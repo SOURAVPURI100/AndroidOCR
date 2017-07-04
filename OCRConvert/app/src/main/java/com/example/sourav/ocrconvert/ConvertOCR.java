@@ -22,22 +22,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import com.todddavies.components.progressbar.ProgressWheel;
-
 import net.bgreco.DirectoryPicker;
-
-import org.apache.commons.io.FileUtils;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -45,6 +32,7 @@ import java.net.URL;
 public class ConvertOCR extends AppCompatActivity implements View.OnClickListener{
 
     static final int myPermissionCode = 10;
+    private static final String STATE_TASK_RUNNING = "taskRunning";
     String outputFileURL;
     Button browse = null;
     Button openFolder = null;
@@ -52,6 +40,7 @@ public class ConvertOCR extends AppCompatActivity implements View.OnClickListene
     private Spinner langSpinner, outputFormat;
     private String lang = "";
     private String docType = "";
+    OCRWebService webService = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +61,17 @@ public class ConvertOCR extends AppCompatActivity implements View.OnClickListene
         pw = (ProgressWheel) findViewById(R.id.pw_spinner);
         pw.setVisibility(View.GONE);
 //        pw.setText("Converting");
+
+        // Set the activity object for Web Service to handle screen orientaion
+        OCRWebService.setActivityObject(this);
+
+        // Check if the task was running so we can restart the spinning wheel
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getBoolean(STATE_TASK_RUNNING, false)) {
+                pw.setVisibility(View.VISIBLE);
+                pw.startSpinning();
+            }
+        }
     }
 
     @Override
@@ -166,7 +166,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         String path = "";
 
-        OCRWebService webService = new OCRWebService();
+        webService = new OCRWebService();
         try {
 //            pw.setEnabled(true);
             pw.setVisibility(View.VISIBLE);
@@ -476,6 +476,20 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        pw.setEnabled(false);
         pw.setVisibility(View.INVISIBLE);
         pw.stopSpinning();
+    }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // If the task is running, save it in our state
+        if (isTaskRunning()) {
+            outState.putBoolean(STATE_TASK_RUNNING, true);
+        }
+    }
+
+    private boolean isTaskRunning() {
+        return (webService != null && webService.OCRConvertTask != null)
+                && (webService.OCRConvertTask.getStatus() == AsyncTask.Status.RUNNING);
     }
 }
