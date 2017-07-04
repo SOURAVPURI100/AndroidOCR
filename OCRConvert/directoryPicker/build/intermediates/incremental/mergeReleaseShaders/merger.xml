@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/home/sourav/Documents/Android_Projects/OCRConvert/directoryPicker/src/main/shaders"/></dataSet><dataSet config="release"><source path="/home/sourav/Documents/Android_Projects/OCRConvert/directoryPicker/src/release/shaders"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/home/sourav/Documents/GitHub/AndroidOCR/AndroidOCR/OCRConvert/directoryPicker/src/main/shaders"/></dataSet><dataSet config="release"><source path="/home/sourav/Documents/GitHub/AndroidOCR/AndroidOCR/OCRConvert/directoryPicker/src/release/shaders"/></dataSet></merger>

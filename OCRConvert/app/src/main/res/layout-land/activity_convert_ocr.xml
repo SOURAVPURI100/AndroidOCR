@@ -88,9 +88,9 @@
         android:id="@+id/openFolder"
         android:textColor="@android:color/background_light"
         android:background="@android:color/holo_blue_light"
-        android:layout_below="@+id/outputFormat"
+        android:layout_alignBottom="@+id/pw_spinner"
         android:layout_alignEnd="@+id/browse"
-        android:layout_marginTop="13dp" />
+        android:layout_marginBottom="17dp" />
 
 
 </RelativeLayout>

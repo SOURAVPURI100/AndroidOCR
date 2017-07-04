@@ -1,10 +1,18 @@
 [
     {
+        "merged": "/home/sourav/Documents/GitHub/AndroidOCR/AndroidOCR/OCRConvert/directoryPicker/build/intermediates/res/merged/androidTest/debug/layout/list_item.xml",
+        "source": "/home/sourav/Documents/GitHub/AndroidOCR/AndroidOCR/OCRConvert/directoryPicker/build/intermediates/bundles/debug/res/layout/list_item.xml"
+    },
+    {
         "merged": "/home/sourav/Documents/Android_Projects/OCRConvert/directoryPicker/build/intermediates/res/merged/androidTest/debug/layout/chooser_list.xml",
         "source": "/home/sourav/Documents/Android_Projects/OCRConvert/directoryPicker/build/intermediates/bundles/debug/res/layout/chooser_list.xml"
     },
     {
         "merged": "/home/sourav/Documents/Android_Projects/OCRConvert/directoryPicker/build/intermediates/res/merged/androidTest/debug/layout/list_item.xml",
         "source": "/home/sourav/Documents/Android_Projects/OCRConvert/directoryPicker/build/intermediates/bundles/debug/res/layout/list_item.xml"
+    },
+    {
+        "merged": "/home/sourav/Documents/GitHub/AndroidOCR/AndroidOCR/OCRConvert/directoryPicker/build/intermediates/res/merged/androidTest/debug/layout/chooser_list.xml",
+        "source": "/home/sourav/Documents/GitHub/AndroidOCR/AndroidOCR/OCRConvert/directoryPicker/build/intermediates/bundles/debug/res/layout/chooser_list.xml"
     }
 ]

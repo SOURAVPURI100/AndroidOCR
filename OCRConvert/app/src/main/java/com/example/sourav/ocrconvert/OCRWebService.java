@@ -31,16 +31,16 @@ package com.example.sourav.ocrconvert;
 
     public class OCRWebService {
 
-        static ConvertOCR globalOCR =null;
+        static ActivityFragment globalOCR =null;
 
         String outputFileURL;
         OCRRestAPI OCRConvertTask = null;
 
-        public static void setActivityObject(ConvertOCR OCR){
+        public static void setActivityObject(ActivityFragment OCR){
             globalOCR = OCR;
             Log.i("OCR static ", globalOCR+"");
         }
-        public void mainOCR(String filePath, ConvertOCR OCR, String lang, String docType) throws Exception
+        public void mainOCR(String filePath, ActivityFragment OCR, String lang, String docType) throws Exception
         {
 		/*
 
@@ -281,7 +281,7 @@ package com.example.sourav.ocrconvert;
                 globalOCR.openFolder.setVisibility(View.VISIBLE);
                 globalOCR.pw.setVisibility(View.INVISIBLE);
                 globalOCR.pw.stopSpinning();
-                Toast.makeText(globalOCR.getApplicationContext(), "File Converted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(globalOCR.getActivity().getApplicationContext(), "File Converted", Toast.LENGTH_SHORT).show();
 
             }
         }
