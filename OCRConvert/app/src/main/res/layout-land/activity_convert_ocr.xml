@@ -49,7 +49,6 @@
         android:layout_marginLeft="30dp"
         android:fontFamily="casual" />
 
-
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -69,7 +68,6 @@
         android:id="@+id/pw_spinner"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        ProgressWheel:pwText="Converting..."
         ProgressWheel:pwTextColor="#222"
         ProgressWheel:pwTextSize="14sp"
         ProgressWheel:pwRimColor="#330097D6"
@@ -81,6 +79,15 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:id="@+id/FileName"
+        android:layout_marginLeft="5dp"
+        android:layout_width="140dp"
+        android:gravity="center"
+        android:layout_height="50dp"
+        android:layout_above="@+id/langSpinner"
+        android:layout_alignStart="@+id/textView4" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -88,9 +95,28 @@
         android:id="@+id/openFolder"
         android:textColor="@android:color/background_light"
         android:background="@android:color/holo_blue_light"
-        android:layout_alignBottom="@+id/pw_spinner"
-        android:layout_alignEnd="@+id/browse"
-        android:layout_marginBottom="17dp" />
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="4dp"
+        android:layout_marginTop="24dp"
+        android:layout_below="@+id/outputFormat"
+        android:layout_alignStart="@+id/outputFormat" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Convert"
+        android:id="@+id/convert"
+        android:textColor="@android:color/background_light"
+        android:background="@android:color/holo_blue_light"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="4dp"
+        android:layout_alignBaseline="@+id/openFolder"
+        android:layout_alignBottom="@+id/openFolder"
+        android:layout_alignStart="@+id/openFolder" />
 
 
 </RelativeLayout>

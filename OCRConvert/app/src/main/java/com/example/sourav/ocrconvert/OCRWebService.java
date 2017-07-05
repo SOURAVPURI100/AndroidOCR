@@ -195,12 +195,12 @@ package com.example.sourav.ocrconvert;
             @Override
             protected Boolean doInBackground(String... strings) {
                 // Provide your user name and license code
-                // String user_name =  "souravpuri";
-//                String license_code = "1F6B8103-A13D-4EC2-981E-52954AD9F901";
-                String license_code = "8F952D83-7ED9-4FAF-BABA-F303E9F7AB03";
-                String user_name =  "AVIRDY";
-
-
+//                 String user_name =  "souravpuri";
+//                 String license_code = "1F6B8103-A13D-4EC2-981E-52954AD9F901";
+//                String license_code = "8F952D83-7ED9-4FAF-BABA-F303E9F7AB03";
+//                String user_name =  "AVIRDY";
+                String user_name =  "souravpu";
+                String license_code = "CFDFCF0E-0F61-4FB5-B4C7-1FE79D33D3CE";
                 String ocrURL = "http://www.ocrwebservice.com/restservices/processDocument?language="
                                  +strings[1]+"&outputformat="+strings[2];
                 try {

@@ -16,12 +16,14 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.todddavies.components.progressbar.ProgressWheel;
@@ -50,26 +52,40 @@ public class ActivityFragment extends Fragment implements View.OnClickListener{
 
     static final int myPermissionCode = 10;
     private static final String STATE_TASK_RUNNING = "taskRunning";
+    private static final String DOWNLOAD_TASK_RUNNING = "downloadRunning";
+    private static final String DownloadVisible = "downloadVisible";
+    private static final String ConvertVisible = "ConvertVisible";
+    private static final String downloading = "Downloading...";
+    private static final String converting = "Converting...";
+    private DownloadFile downloadTask = null;
     String outputFileURL;
     Button browse = null;
     Button openFolder = null;
+    Button convert = null;
     ProgressWheel pw = null;
+    TextView fileName = null;
     private Spinner langSpinner, outputFormat;
     private String lang = "";
     private String docType = "";
     OCRWebService webService = null;
+    String path = "";
+    String file = "";
+    String spinWheelText = "";
+    String outputFileName = "output";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
+        Log.i("FragmentView", "Oncreated"); // ++ extra
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.i("FragmentView", "created"); // ++ extra
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.activity_convert_ocr, container, false);
+
         browse = (Button) view.findViewById(R.id.browse);
         browse.setOnClickListener(this);
 
@@ -78,12 +94,21 @@ public class ActivityFragment extends Fragment implements View.OnClickListener{
         openFolder.setEnabled(false);
         openFolder.setVisibility(View.INVISIBLE);
 
+        convert = (Button) view.findViewById(R.id.convert);
+        convert.setOnClickListener(this);
+        convert.setEnabled(false);
+        convert.setVisibility(View.INVISIBLE);
+
+        fileName = (TextView) view.findViewById(R.id.FileName);
+        fileName.setText(file);
+
         // Create spinner or dropdown for languages
 
         addLanguages(view);
         addOutputFormat(view);
         pw = (ProgressWheel) view.findViewById(R.id.pw_spinner);
         pw.setVisibility(View.GONE);
+        pw.setText(spinWheelText);
 //        pw.setText("Converting");
 
         // Set the activity object for Web Service to handle screen orientaion
@@ -95,6 +120,21 @@ public class ActivityFragment extends Fragment implements View.OnClickListener{
                 pw.setVisibility(View.VISIBLE);
                 pw.startSpinning();
             }
+
+            if (savedInstanceState.getBoolean(DOWNLOAD_TASK_RUNNING, false)) {
+                pw.setVisibility(View.VISIBLE);
+                pw.startSpinning();
+            }
+
+            if(savedInstanceState.getBoolean(DownloadVisible, false)){
+                openFolder.setEnabled(true);
+                openFolder.setVisibility(View.VISIBLE);
+            }
+
+            if(savedInstanceState.getBoolean(ConvertVisible, false)){
+                convert.setEnabled(true);
+                convert.setVisibility(View.VISIBLE);
+            }
         }
         return view;
     }
@@ -103,9 +143,6 @@ public class ActivityFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.browse:
-                // Set Language and output format
-                lang = (String) langSpinner.getSelectedItem();
-                docType = (String) outputFormat.getSelectedItem();
                 Intent intent = new Intent()
                         .setType("*/*")
 //                        .setType("image/*|application/pdf")
@@ -120,6 +157,25 @@ public class ActivityFragment extends Fragment implements View.OnClickListener{
 //                intentOpen.putExtra(DirectoryPicker.ONLY_DIRS,false);
                 // optionally set options here
                 startActivityForResult(intentOpen, 100);
+                break;
+            case R.id.convert:
+                try {
+                    pw.setVisibility(View.VISIBLE);
+                    pw.startSpinning();
+                    pw.setText(converting);
+                    convert.setEnabled(false);
+                    convert.setVisibility(View.INVISIBLE);
+                    // Set Language and output format
+                    lang = (String) langSpinner.getSelectedItem();
+                    docType = (String) outputFormat.getSelectedItem();
+                    webService = new OCRWebService();
+                    webService.mainOCR(path, this, lang, docType);
+                }
+
+                catch(Exception e){
+                    e.printStackTrace();
+        }
+
                 break;
             default:
                 break;
@@ -188,29 +244,32 @@ public class ActivityFragment extends Fragment implements View.OnClickListener{
                         myPermissionCode);
             }
 
-            String path = "";
-
-            webService = new OCRWebService();
-            try {
-//            pw.setEnabled(true);
-                pw.setVisibility(View.VISIBLE);
-                pw.startSpinning();
-                //
-                // path = getPath(this, selectedfile);//
                 path = getPathFile(getActivity(), selectedfile);
+                String[] fileParts = path.split("/");
+                file = fileParts[fileParts.length -1];
+                fileName.setText(file);
+                convert.setEnabled(true);
+                convert.setVisibility(View.VISIBLE);
+
+                Log.i("filepathvalue", path);
+
+                // Create new file name by removing '.' extension
+                int count =0;
+                for(int j =file.length() -1; j >=0; j--){
+                    if(file.charAt(j) == '.')
+                        break;
+                    count++;
+                }
+                outputFileName = file.substring(0, file.length() - count -1);
 
                 //
                 // String filePath = selectedfile.getPath();
                 // webService.mainOCR(filePath);
 
-                webService.mainOCR(path, this, lang, docType);
+
 //            outputFileURL = webService.mainOCR(path, this);
 //            Toast.makeText(this, "File converted", Toast.LENGTH_SHORT).show();
-            }
 
-            catch(Exception e){
-                e.printStackTrace();
-            }
 
         }
 
@@ -220,6 +279,7 @@ public class ActivityFragment extends Fragment implements View.OnClickListener{
             openFolder.setVisibility(View.INVISIBLE);
             pw.setVisibility(View.VISIBLE);
             pw.startSpinning();
+            pw.setText(downloading);
             Bundle extras = data.getExtras();
             String path = (String) extras.get(DirectoryPicker.CHOSEN_DIRECTORY);
             System.out.println(path);
@@ -232,7 +292,8 @@ public class ActivityFragment extends Fragment implements View.OnClickListener{
                 try {
                     // Download output file
                     //DownloadConvertedFile(outputFileURL, path);
-                    new DownloadFile().execute(outputFileURL, path);
+                    downloadTask = new DownloadFile();
+                    downloadTask.execute(outputFileURL, path);
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -356,10 +417,8 @@ public class ActivityFragment extends Fragment implements View.OnClickListener{
 
                     InputStream inputStream = downloadConnection.getInputStream();
 
-
-
                     // opens an output stream to save into file
-                    FileOutputStream outputStream = new FileOutputStream(Path+"/output."+docType);
+                    FileOutputStream outputStream = new FileOutputStream(Path+"/"+outputFileName+"."+docType);
 
                     int bytesRead = -1;
                     byte[] buffer = new byte[4096];
@@ -386,7 +445,9 @@ public class ActivityFragment extends Fragment implements View.OnClickListener{
         protected void onPostExecute(Boolean b){
             pw.setVisibility(View.INVISIBLE);
             pw.stopSpinning();
-            Toast.makeText(getActivity().getApplicationContext(), "output.txt File downloaded", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), outputFileName+"."+docType+" downloaded", Toast.LENGTH_SHORT).show();
+            fileName.setText("");
+            file = "";
         }
     }
 
@@ -509,11 +570,39 @@ public class ActivityFragment extends Fragment implements View.OnClickListener{
         // If the task is running, save it in our state
         if (isTaskRunning()) {
             outState.putBoolean(STATE_TASK_RUNNING, true);
+            spinWheelText = converting;
         }
+
+        // If the download task is running, save it in our state
+        if (isDownloadRunning()) {
+            outState.putBoolean(DOWNLOAD_TASK_RUNNING, true);
+            spinWheelText = downloading;
+        }
+
+        if(View.VISIBLE == openFolder.getVisibility()){
+            outState.putBoolean(DownloadVisible, true);
+        }
+        else{
+            outState.putBoolean(DownloadVisible, false);
+        }
+
+        if(View.VISIBLE == convert.getVisibility()){
+            outState.putBoolean(ConvertVisible, true);
+        }
+        else{
+            outState.putBoolean(ConvertVisible, false);
+        }
+
+
     }
 
     private boolean isTaskRunning() {
         return (webService != null && webService.OCRConvertTask != null)
                 && (webService.OCRConvertTask.getStatus() == AsyncTask.Status.RUNNING);
+    }
+
+    private boolean isDownloadRunning() {
+        return (downloadTask != null)
+                && (downloadTask.getStatus() == AsyncTask.Status.RUNNING);
     }
 }
